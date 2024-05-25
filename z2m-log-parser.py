@@ -34,7 +34,10 @@ class LogParser:
                     parsedLine.type = line[0:4]
                     parsedLine.date = datetime.strptime(line[6:25], '%Y-%m-%d %H:%M:%S')
                 except:
-                    parsedLines[1:].message + "/n" + parsedLine
+                    try:
+                        parsedLines[-1].data.message = parsedLines[-1].data.message + line
+                    except Exception:
+                        pass
                     continue
 
                 parsedLine.data.message = line[27:]
@@ -74,3 +77,8 @@ class LogParser:
             if any(events):
                 return events
             return None
+
+lala = LogParser()
+#lalalala = LogEntry()[]
+lalalala = lala.parseLogs("log.txt")
+print(lalalala[31].data.message)
