@@ -74,8 +74,3 @@ class LogParser:
             if any(events):
                 return events
             return None
-
-lala = LogParser()
-#lalalala = LogEntry()[]
-lalalala = lala.parseLogs("log.txt")
-print(lalalala[37].data.mqttMessage.topic)
