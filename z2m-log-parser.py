@@ -46,9 +46,9 @@ class LogParser:
                     parsedLine.data.mqttMessage.topic = line.split("topic")[1].rsplit(", payload")[0].strip().strip("'")
                     parsedLine.data.mqttMessage.payload = line.split("payload")[1].strip().strip("'")
                     try:
-                        parsedLine.data.mqttMessage.payload = json.loads(line.split("payload")[1].strip().strip("'"))
+                        parsedLine.data.mqttMessage.payload = json.loads("{\"payload\":" + "\""  + line.split("payload")[1].strip().strip("'") + "\"" + "}")
                     except:
-                        parsedLine.data.mqttMessage.payload = None
+                        parsedLine.data.mqttMessage.payload = json.loads("{\"payload\":" + "\"Couldn't convert to JSON\"" + "}")
                 else:
                     parsedLine.data.isMqttPublish = True
                     parsedLine.data.mqttMessage.topic = None
@@ -77,8 +77,3 @@ class LogParser:
             if any(events):
                 return events
             return None
-
-lala = LogParser()
-#lalalala = LogEntry()[]
-lalalala = lala.parseLogs("log.txt")
-print(lalalala[31].data.message)
