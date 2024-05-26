@@ -51,14 +51,15 @@ def parse_logs(path):
     return parsed_lines
 def parse_latest_logs(path: str):
         events = parse_logs(path)
-        pinter_path = "./eventPointer.txt"
+        execution_path = os.path.dirname(os.path.realpath(__file__))
+        pointer_file_name = execution_path + "/eventPointer.txt"
         last_event = datetime.strftime(events[(len(events))-1].date, '%Y-%m-%d %H:%M:%S')
-        if not os.path.exists(pinter_path):
-            f = open(pinter_path, "w")
+        if not os.path.exists(pointer_file_name):
+            f = open(pointer_file_name, "w")
             f.write(last_event)
             f.close()
         else:
-            f = open(pinter_path, "r+")
+            f = open(pointer_file_name, "r+")
             date_st = f.read()
             date_dt = datetime.strptime(date_st, '%Y-%m-%d %H:%M:%S')
             if date_st and date_dt <= events[(len(events))-1].date:
