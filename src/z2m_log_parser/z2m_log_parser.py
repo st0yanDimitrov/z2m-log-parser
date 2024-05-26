@@ -21,7 +21,6 @@ class LogEntry(object):
 
 class Z2mLogParser:
 
-    @classmethod
     def parse_logs(path):
         parsed_lines = []
         with open(path) as log:
@@ -53,9 +52,8 @@ class Z2mLogParser:
                 parsed_lines.append(parsed_line)
         return parsed_lines
     
-    @classmethod
-    def parse_latest_logs(cls, path: str):
-            events = cls.parse_logs(path)
+    def parse_latest_logs(self, path: str):
+            events = self.parse_logs(path)
             pointer_file_name =  "eventPointer.txt"
             last_event = datetime.strftime(events[(len(events))-1].date, '%Y-%m-%d %H:%M:%S')
             if not os.path.exists(pointer_file_name):
