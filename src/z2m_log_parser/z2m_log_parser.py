@@ -21,7 +21,7 @@ class LogEntry(object):
 
 class Z2mLogParser:
 
-    def parse_logs(path):
+    def parse_logs(self, path):
         parsed_lines = []
         with open(path) as log:
             for line in log:
