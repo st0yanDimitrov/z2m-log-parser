@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "z2m_log_parser"
-version = "0.0.1"
+version = "0.0.4"
 authors = [
   { name="Stoyan Dimitrov", email="stdimitrov@gmail.com" },
 ]
