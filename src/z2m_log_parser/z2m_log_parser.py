@@ -27,8 +27,7 @@ class Z2mLogParser:
         self.pointer_path = self.__get_caller_path()
 
     def __get_caller_path(self) -> str:
-        filename = inspect.getframeinfo(sys._getframe(1)).filename
-        caller_path = os.path.join(os.getcwd(), filename)
+        caller_path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         return caller_path
 
     def __extract_date(self, line) -> datetime:
