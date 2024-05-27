@@ -52,44 +52,44 @@ class Z2mLogParser:
     def __append_to_the_previous_entry(self, input_list: list[LogEntry], line: str):
         input_list[-1].data.message = input_list[-1].data.message + line
 
-    def __get_last_event(self, events: list[LogEntry]):
-        last_event = datetime.strftime(events[(len(events))-1].date, '%Y-%m-%d %H:%M:%S')
+    def __get_last_event(self, entries: list[LogEntry]):
+        last_event = datetime.strftime(entries[(len(entries))-1].date, '%Y-%m-%d %H:%M:%S')
         return last_event
 
 
     def parse_logs(self, path: str):
         try:
             with open(path) as log:
-                parsed_lines = []
+                entries = []
                 for line in log:
-                    parsed_line= LogEntry()
+                    entry= LogEntry()
                     try:
-                        parsed_line.date = self.__extract_date(line)
+                        entry.date = self.__extract_date(line)
                     except:
                         try:
-                            self.__append_to_the_previous_entry(parsed_lines, line)
+                            self.__append_to_the_previous_entry(entries, line)
                         except Exception:
                             pass
                         continue
-                    parsed_line.type = self.__extract_type(line)
-                    parsed_line.data.message = self.__extract_data_message(line)
-                    if parsed_line.data.message[0:12] == "MQTT publish":
-                        parsed_line.data.is_mqtt_publish = True
-                        parsed_line.data.mqtt_message.topic = self.__extract_mqttmessage_topic(line)
-                        parsed_line.data.mqtt_message.payload = self.__extract_mqttmessage_payload(line)
+                    entry.type = self.__extract_type(line)
+                    entry.data.message = self.__extract_data_message(line)
+                    if entry.data.message[0:12] == "MQTT publish":
+                        entry.data.is_mqtt_publish = True
+                        entry.data.mqtt_message.topic = self.__extract_mqttmessage_topic(line)
+                        entry.data.mqtt_message.payload = self.__extract_mqttmessage_payload(line)
                     else:
-                        parsed_line.data.is_mqtt_publish = False
-                        parsed_line.data.mqtt_message.topic = None
-                        parsed_line.data.mqtt_message.payload = None
-                    parsed_lines.append(parsed_line)
-            return parsed_lines
+                        entry.data.is_mqtt_publish = False
+                        entry.data.mqtt_message.topic = None
+                        entry.data.mqtt_message.payload = None
+                    entries.append(entry)
+            return entries
         except:
             raise FileExistsError(path + " doesn't exist")
     
     def parse_latest_logs(self, path: str):
-            events = self.parse_logs(path)
+            entries = self.parse_logs(path)
             pointer_file =  self.pointer_path + "/EventPointer.txt"
-            last_event = self.__get_last_event(events)
+            last_event = self.__get_last_event(entries)
             if not os.path.exists(pointer_file):
                 f = open(pointer_file, "w")
                 f.write(last_event)
@@ -98,14 +98,12 @@ class Z2mLogParser:
                 f = open(pointer_file, "r+")
                 date_string = f.read()
                 date_dtatetime = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
-                if date_string and date_dtatetime <= events[(len(events))-1].date:
-                    events = [x for x in events if x.date > date_dtatetime]
-                if events:
+                if date_string and date_dtatetime <= entries[(len(entries))-1].date:
+                    entries = [x for x in entries if x.date > date_dtatetime]
+                if entries:
                     f.seek(0)
                     f.truncate()
                     f.write(last_event)
-            if any(events):
-                return events
-            return None
+            return entries
     
 
