@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import os
+import sys
 import inspect
 
 class MqttMessage(object):
@@ -22,8 +23,13 @@ class LogEntry(object):
 
 class Z2mLogParser:
 
-    def __init__(self, pointer_path):
-        self.pointer_path = pointer_path
+    def __init__(self):
+        self.pointer_path = self.__get_caller_path()
+
+    def __get_caller_path(self) -> str:
+        filename = inspect.getframeinfo(sys._getframe(1)).filename
+        caller_path = os.path.join(os.getcwd(), filename)
+        return caller_path
 
     def __extract_date(self, line) -> datetime:
         date = datetime.strptime(line[6:25], '%Y-%m-%d %H:%M:%S')
@@ -55,7 +61,6 @@ class Z2mLogParser:
     def __get_last_event(self, entries: list[LogEntry]):
         last_event = datetime.strftime(entries[(len(entries))-1].date, '%Y-%m-%d %H:%M:%S')
         return last_event
-
 
     def parse_logs(self, path: str):
         try:
@@ -105,5 +110,3 @@ class Z2mLogParser:
                     f.truncate()
                     f.write(last_event)
             return entries
-    
-
