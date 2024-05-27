@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 import os
-from pathlib import Path
+import sys
 
 class MqttMessage(object):
     def __init__(self):
@@ -26,7 +26,7 @@ class Z2mLogParser:
         self.pointer_path = self.__get_caller_path()
 
     def __get_caller_path(self) -> str:
-        caller_path = Path(__file__).parent.resolve().as_posix()
+        caller_path = sys.path[0]
         return caller_path
 
     def __extract_date(self, line) -> datetime:
