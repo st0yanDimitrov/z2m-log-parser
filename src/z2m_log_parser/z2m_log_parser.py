@@ -54,7 +54,8 @@ class Z2mLogParser:
     
     def parse_latest_logs(self, path: str):
             events = self.parse_logs(path)
-            pointer_file_name =  "eventPointer.txt"
+            execution_path = os.path.dirname(os.path.realpath(__file__))
+            pointer_file_name =  execution_path + "/eventPointer.txt"
             last_event = datetime.strftime(events[(len(events))-1].date, '%Y-%m-%d %H:%M:%S')
             if not os.path.exists(pointer_file_name):
                 f = open(pointer_file_name, "w")
