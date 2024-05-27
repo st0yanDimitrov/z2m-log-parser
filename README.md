@@ -1,6 +1,6 @@
 # zigbee2mqtt log parser
 
-A simple module for parsing of zigbee2mqtt logs into Python object for further provessing.
+A simple module for parsing of zigbee2mqtt logs into Python object for further processing.
 
 **How to install:**
 
