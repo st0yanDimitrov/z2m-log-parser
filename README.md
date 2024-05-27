@@ -11,7 +11,7 @@ pip install z2m-log-parser
 **How to use:**
 
 ```py
-from z2m_log_parser import z2m_log_parser
+import z2m_log_parser
 
-parser = z2m_log_parser.Z2mLogParser("")
+parser = Z2mLogParser()
 ```
