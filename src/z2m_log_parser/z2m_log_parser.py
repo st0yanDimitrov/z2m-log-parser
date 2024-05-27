@@ -22,8 +22,8 @@ class LogEntry(object):
 
 class Z2mLogParser:
 
-    def __init__(self):
-        self.execution_path = self.get_calling_script_path()
+    def __init__(self, pointer_path):
+        self.pointer_path = pointer_path
 
     def get_calling_script_path(self):
         frame = inspect.stack()[1]
@@ -92,14 +92,14 @@ class Z2mLogParser:
     
     def parse_latest_logs(self, path: str):
             events = self.parse_logs(path)
-            pointer_file_name =  self.execution_path + "/eventPointer.txt"
+            pointer_file =  self.pointer_path + "/EventPointer.txt"
             last_event = self.get_last_event(events)
-            if not os.path.exists(pointer_file_name):
-                f = open(pointer_file_name, "w")
+            if not os.path.exists(pointer_file):
+                f = open(pointer_file, "w")
                 f.write(last_event)
                 f.close()
             else:
-                f = open(pointer_file_name, "r+")
+                f = open(pointer_file, "r+")
                 date_string = f.read()
                 date_dtatetime = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
                 if date_string and date_dtatetime <= events[(len(events))-1].date:
