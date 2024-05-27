@@ -108,6 +108,3 @@ class Z2mLogParser:
                     f.truncate()
                     f.write(last_event)
             return entries
-    
-parser = Z2mLogParser()
-events = parser.parse_latest_logs("C:\\Users\\Stoyan.Z.Dimitrov\\OneDrive - DIGITALL Nature\\Documents\\z2m_log_parser\\src\\z2m_log_parser\\log.txt")
