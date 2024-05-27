@@ -1,8 +1,7 @@
 from datetime import datetime
 import json
 import os
-import sys
-import inspect
+from pathlib import Path
 
 class MqttMessage(object):
     def __init__(self):
@@ -27,7 +26,7 @@ class Z2mLogParser:
         self.pointer_path = self.__get_caller_path()
 
     def __get_caller_path(self) -> str:
-        caller_path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+        caller_path = Path(__file__).parent.resolve().as_posix()
         return caller_path
 
     def __extract_date(self, line) -> datetime:
@@ -109,3 +108,6 @@ class Z2mLogParser:
                     f.truncate()
                     f.write(last_event)
             return entries
+    
+parser = Z2mLogParser()
+events = parser.parse_latest_logs("C:\\Users\\Stoyan.Z.Dimitrov\\OneDrive - DIGITALL Nature\\Documents\\z2m_log_parser\\src\\z2m_log_parser\\log.txt")
