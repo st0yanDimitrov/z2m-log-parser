@@ -22,7 +22,7 @@ class LogEntry(object):
 class Z2mLogParser:
 
     def __init__(self):
-        self.execution_path = os.getcwd()
+        self.execution_path = os.path.dirname(os.path.abspath(__file__))
 
     def extract_date(self, line) -> datetime:
         date = datetime.strptime(line[6:25], '%Y-%m-%d %H:%M:%S')
@@ -106,3 +106,8 @@ class Z2mLogParser:
             if any(events):
                 return events
             return None
+    
+
+parser = Z2mLogParser()
+logs = parser.parse_logs("C:\\Users\\Stoyan.Z.Dimitrov\\OneDrive - DIGITALL Nature\\Documents\\z2m_log_parser\\src\\z2m_log_parser\\log.txt")
+print(logs[7].data.message)
