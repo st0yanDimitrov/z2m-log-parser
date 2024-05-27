@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import os
+import inspect
 
 class MqttMessage(object):
     def __init__(self):
@@ -22,7 +23,11 @@ class LogEntry(object):
 class Z2mLogParser:
 
     def __init__(self):
-        self.execution_path = os.path.dirname(os.path.abspath(__file__))
+        self.execution_path = self.get_calling_script_path()
+
+    def get_calling_script_path(self):
+        frame = inspect.stack()[1]
+        return os.path.abspath(os.path.dirname(frame.filename))
 
     def extract_date(self, line) -> datetime:
         date = datetime.strptime(line[6:25], '%Y-%m-%d %H:%M:%S')
