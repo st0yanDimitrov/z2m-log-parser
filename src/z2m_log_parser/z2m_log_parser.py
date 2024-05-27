@@ -25,27 +25,23 @@ class Z2mLogParser:
     def __init__(self, pointer_path):
         self.pointer_path = pointer_path
 
-    def get_calling_script_path(self):
-        frame = inspect.stack()[1]
-        return os.path.abspath(os.path.dirname(frame.filename))
-
-    def extract_date(self, line) -> datetime:
+    def __extract_date(self, line) -> datetime:
         date = datetime.strptime(line[6:25], '%Y-%m-%d %H:%M:%S')
         return date
     
-    def extract_type(self, line) -> str:
+    def __extract_type(self, line) -> str:
         type = line[0:4]
         return type
 
-    def extract_data_message(self, line: str) -> str:
+    def __extract_data_message(self, line: str) -> str:
         message = line[27:]
         return message
     
-    def extract_mqttmessage_topic(self, line: str) -> str:
+    def __extract_mqttmessage_topic(self, line: str) -> str:
         topic = line.split("topic")[1].rsplit(", payload")[0].strip().strip("'")
         return topic
     
-    def extract_mqttmessage_payload(self, line: str) -> json:
+    def __extract_mqttmessage_payload(self, line: str) -> json:
         payload = line.split("payload")[1].strip().strip("'")
         try:
             payload = json.loads("{\"payload\":" + "\""  + line.split("payload")[1].strip().strip("'") + "\"" + "}")
@@ -53,10 +49,10 @@ class Z2mLogParser:
             payload = json.loads("{\"payload\":" + "\"Couldn't convert to JSON\"" + "}")
         return payload
     
-    def append_to_the_previous_entry(self, input_list: list[LogEntry], line: str):
+    def __append_to_the_previous_entry(self, input_list: list[LogEntry], line: str):
         input_list[-1].data.message = input_list[-1].data.message + line
 
-    def get_last_event(self, events: list[LogEntry]):
+    def __get_last_event(self, events: list[LogEntry]):
         last_event = datetime.strftime(events[(len(events))-1].date, '%Y-%m-%d %H:%M:%S')
         return last_event
 
@@ -68,19 +64,19 @@ class Z2mLogParser:
                 for line in log:
                     parsed_line= LogEntry()
                     try:
-                        parsed_line.date = self.extract_date(line)
+                        parsed_line.date = self.__extract_date(line)
                     except:
                         try:
-                            self.append_to_the_previous_entry(parsed_lines, line)
+                            self.__append_to_the_previous_entry(parsed_lines, line)
                         except Exception:
                             pass
                         continue
-                    parsed_line.type = self.extract_type(line)
-                    parsed_line.data.message = self.extract_data_message(line)
+                    parsed_line.type = self.__extract_type(line)
+                    parsed_line.data.message = self.__extract_data_message(line)
                     if parsed_line.data.message[0:12] == "MQTT publish":
                         parsed_line.data.is_mqtt_publish = True
-                        parsed_line.data.mqtt_message.topic = self.extract_mqttmessage_topic(line)
-                        parsed_line.data.mqtt_message.payload = self.extract_mqttmessage_payload(line)
+                        parsed_line.data.mqtt_message.topic = self.__extract_mqttmessage_topic(line)
+                        parsed_line.data.mqtt_message.payload = self.__extract_mqttmessage_payload(line)
                     else:
                         parsed_line.data.is_mqtt_publish = False
                         parsed_line.data.mqtt_message.topic = None
@@ -93,7 +89,7 @@ class Z2mLogParser:
     def parse_latest_logs(self, path: str):
             events = self.parse_logs(path)
             pointer_file =  self.pointer_path + "/EventPointer.txt"
-            last_event = self.get_last_event(events)
+            last_event = self.__get_last_event(events)
             if not os.path.exists(pointer_file):
                 f = open(pointer_file, "w")
                 f.write(last_event)
@@ -111,3 +107,5 @@ class Z2mLogParser:
             if any(events):
                 return events
             return None
+    
+
