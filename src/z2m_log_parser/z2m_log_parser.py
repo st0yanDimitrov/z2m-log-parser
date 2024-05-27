@@ -106,8 +106,3 @@ class Z2mLogParser:
             if any(events):
                 return events
             return None
-    
-
-parser = Z2mLogParser()
-logs = parser.parse_logs("C:\\Users\\Stoyan.Z.Dimitrov\\OneDrive - DIGITALL Nature\\Documents\\z2m_log_parser\\src\\z2m_log_parser\\log.txt")
-print(logs[7].data.message)
