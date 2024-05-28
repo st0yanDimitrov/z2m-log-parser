@@ -24,7 +24,7 @@ class LogEntry(object):
 class Z2mLogParser:
 
     def __init__(self):
-        self.pointer_path = self.__get_caller_path()
+        self.__pointer_path = self.__get_caller_path()
 
     def __get_caller_path(self) -> str:
         caller_path = sys.path[0]
@@ -92,7 +92,7 @@ class Z2mLogParser:
     
     def parse_latest_logs(self, path: str):
             entries = self.parse_logs(path)
-            pointer_file =  self.pointer_path + "/EventPointer.txt"
+            pointer_file =  self.__pointer_path + "/EventPointer.txt"
             last_event = self.__get_last_event(entries)
             if not os.path.exists(pointer_file):
                 f = open(pointer_file, "w")
