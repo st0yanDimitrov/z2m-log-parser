@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 import os
 import sys
+from types import SimpleNamespace
 
 class MqttMessage(object):
     def __init__(self):
@@ -29,12 +30,12 @@ class Z2mLogParser:
         caller_path = sys.path[0]
         return caller_path
 
-    def __extract_date(self, line) -> datetime:
+    def __extract_date(self, line: str) -> datetime:
         date = datetime.strptime(line[6:25], '%Y-%m-%d %H:%M:%S')
         return date
     
-    def __extract_type(self, line) -> str:
-        type = line[0:4]
+    def __extract_type(self, line: str) -> str:
+        type = line[0:5].strip()
         return type
 
     def __extract_data_message(self, line: str) -> str:
@@ -48,9 +49,9 @@ class Z2mLogParser:
     def __extract_mqttmessage_payload(self, line: str) -> json:
         payload = line.split("payload")[1].strip().strip("'")
         try:
-            payload = json.loads("{\"payload\":" + "\""  + line.split("payload")[1].strip().strip("'") + "\"" + "}")
+            payload = json.loads(line.split("payload")[1].strip().strip("'"), object_hook=lambda d: SimpleNamespace(**d))
         except:
-            payload = json.loads("{\"payload\":" + "\"Couldn't convert to JSON\"" + "}")
+            payload = "Couldn't convert to JSON"
         return payload
     
     def __append_to_the_previous_entry(self, input_list: list[LogEntry], line: str):
