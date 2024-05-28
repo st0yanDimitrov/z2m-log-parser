@@ -11,7 +11,7 @@ pip install z2m-log-parser
 **How to use:**
 
 ```py
-import z2m_log_parser
+from z2m_log_parser import *
 
 ***
 
@@ -46,6 +46,66 @@ parse_logs() -> list[]
 ```py
 logs = parser.parse_logs()
 ```
+
+
+```txt
+info  2024-05-28 10:42:38: MQTT publish: topic 'zigbee2mqtt/0x84fd27fffe9f718e', payload '{"linkquality":54,"power_on_behavior":"previous","state":"OFF","update":{"installed_version":537019939,"latest_version":587765297,"state":"available"}}'
+```
+
+```py
+{
+'type': 'info',
+'date': datetime.datetime(2024, 5, 28, 10, 42, 38),
+'data': {'is_mqtt_publish': True,
+         'message': 'MQTT publish: topic \'zigbee2mqtt/0x84fd27fffe9f718e\', payload \'{"linkquality":54,"power_on_behavior":"previous","state":"OFF","update":{"installed_version":537019939,"latest_version":587765297,"state":"available"}}\'\n',
+         'mqtt_message': {'topic': 'zigbee2mqtt/0x84fd27fffe9f718e',
+                          'payload': {'payload': "Couldn't convert to JSON"}}}}
+```
+
+
+```txt
+info  2024-05-25 22:53:36: Starting Zigbee2MQTT version 1.35.1 (commit #9eaaa0f)
+```
+
+```py
+{
+'type': 'info',
+'date': 'datetime.datetime(2024, 5, 25, 22, 53, 36)',
+'data': { 'is_mqtt_publish': False,
+          'message': "Starting Zigbee2MQTT version 1.35.1 (commit #9eaaa0f)",
+          'mqtt_message': {'topic': None,
+                           'payload': None
+                          }
+        }
+}
+```
+
+```txt
+error 2024-05-25 22:53:58: Error: Failed to connect to the adapter (Error: SRSP - SYS - ping after 6000ms)
+    at ZStackAdapter.start (/app/node_modules/zigbee-herdsman/src/adapter/z-stack/adapter/zStackAdapter.ts:103:27)
+    at Controller.start (/app/node_modules/zigbee-herdsman/src/controller/controller.ts:132:29)
+    at Zigbee.start (/app/lib/zigbee.ts:60:27)
+    at Controller.start (/app/lib/controller.ts:98:27)
+    at start (/app/index.js:107:5)
+```
+
+```py
+{
+'type': 'error',
+'date': datetime.datetime(2024, 5, 25, 22, 53, 58),
+'data': {'is_mqtt_publish': False,
+         'message': 'Error: Failed to connect to the adapter (Error: SRSP - SYS - ping after 6000ms)\n
+          at ZStackAdapter.start (/app/node_modules/zigbee-herdsman/src/adapter/z-stack/adapter/zStackAdapter.ts:103:27)\n
+          at Controller.start (/app/node_modules/zigbee-herdsman/src/controller/controller.ts:132:29)\n
+          at Zigbee.start (/app/lib/zigbee.ts:60:27)\n    at Controller.start (/app/lib/controller.ts:98:27)\n
+          at start (/app/index.js:107:5)',
+          'mqtt_message': {'topic': None,
+                           'payload': None
+                          }
+        }
+}
+```
+
 
 parse_latest_logs()
 
