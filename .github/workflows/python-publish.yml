@@ -33,9 +33,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install build
     - name: Run unit tests
-      run: | 
-        ls
-        python -m unittest test_z2m_log_parser.py
+      run:  python -m unittest
     - name: Build package
       run: python -m build
     - name: Publish package
