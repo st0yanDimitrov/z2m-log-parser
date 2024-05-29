@@ -4,18 +4,18 @@ import os
 import sys
 from types import SimpleNamespace
 
-class MqttMessage(object):
+class MqttMessage():
     def __init__(self):
         self.topic: str = str
         self.payload: json = json
 
-class LogEntryData(object):
+class LogEntryData():
     def __init__(self):
         self.is_mqtt_publish: bool = bool
         self.message: str = str
         self.mqtt_message: MqttMessage = MqttMessage()
 
-class LogEntry(object):
+class LogEntry():
     def __init__(self):
         self.type: str = str
         self.date: datetime =datetime
@@ -57,9 +57,9 @@ class Z2mLogParser:
     def __append_to_the_previous_entry(self, input_list: list[LogEntry], line: str):
         input_list[-1].data.message = input_list[-1].data.message + line
 
-    def __get_last_event(self, entries: list[LogEntry]):
-        last_event = datetime.strftime(entries[(len(entries))-1].date, '%Y-%m-%d %H:%M:%S')
-        return last_event
+    def __get_last_event_date(self, entries: list[LogEntry]) -> str:
+        last_event_date = datetime.strftime(entries[-1].date, '%Y-%m-%d %H:%M:%S')
+        return last_event_date
 
     def parse_logs(self, path: str):
         try:
@@ -93,7 +93,7 @@ class Z2mLogParser:
     def parse_latest_logs(self, path: str):
             entries = self.parse_logs(path)
             pointer_file =  self.__pointer_path + "/EventPointer.txt"
-            last_event = self.__get_last_event(entries)
+            last_event = self.__get_last_event_date(entries)
             if not os.path.exists(pointer_file):
                 f = open(pointer_file, "w")
                 f.write(last_event)
