@@ -44,8 +44,8 @@ class MqttMessage(object):
 _**parse_logs(**<log_path>**) -> list[LogEntry]**_
 
 ```py
-path = './log.txt'
-logs = parser.parse_logs(path)
+path: str = './log.txt'
+logs: list[LogEntry] = parser.parse_logs(path)
 ```
 
 
@@ -55,8 +55,8 @@ This method will read the content of the target log file and return it's content
 _**parse_latest_logs(**<log_path>**) -> list[LogEntry]**_
 
 ```py
-path = './log.txt'
-logs = parser.parse_latest_logs('path')
+path: str = './log.txt'
+logs: list[LogEntry] = parser.parse_latest_logs('path')
 ```
 
 This method will do the same as the one above, but it will generate a pointer file in the execution directory, containing the timestamp of the latest log on the time of the execution.
