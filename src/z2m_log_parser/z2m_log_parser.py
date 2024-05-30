@@ -7,7 +7,7 @@ from types import SimpleNamespace
 class MqttMessage():
     def __init__(self):
         self.topic: str = str
-        self.payload: json = json
+        self.payload: object = object
 
 class LogEntryData():
     def __init__(self):
