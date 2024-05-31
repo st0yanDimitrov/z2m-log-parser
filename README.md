@@ -36,7 +36,7 @@ class LogEntryData(object):
 class MqttMessage(object):
     def __init__(self):
         self.topic: str
-        self.payload: json
+        self.payload: object
 ```
 
 ## Methods:
