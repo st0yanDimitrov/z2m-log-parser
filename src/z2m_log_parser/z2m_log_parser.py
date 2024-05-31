@@ -7,7 +7,7 @@ from types import SimpleNamespace
 class MqttMessage():
     def __init__(self):
         self.topic: str = str
-        self.payload: json = json
+        self.payload: object = object
 
 class LogEntryData():
     def __init__(self):
@@ -46,7 +46,7 @@ class Z2mLogParser:
         topic = line.split("topic")[1].rsplit(", payload")[0].strip().strip("'")
         return topic
     
-    def __extract_mqttmessage_payload(self, line: str) -> json:
+    def __extract_mqttmessage_payload(self, line: str) -> object:
         payload = line.split("payload")[1].strip().strip("'")
         try:
             payload = json.loads(line.split("payload")[1].strip().strip("'"), object_hook=lambda d: SimpleNamespace(**d))
@@ -61,7 +61,7 @@ class Z2mLogParser:
         last_event_date = datetime.strftime(entries[-1].date, '%Y-%m-%d %H:%M:%S')
         return last_event_date
 
-    def parse_logs(self, path: str):
+    def parse_logs(self, path: str) -> list[LogEntry]:
         try:
             with open(path) as log:
                 entries = []
@@ -90,7 +90,7 @@ class Z2mLogParser:
         except:
             raise FileExistsError(path + " doesn't exist")
     
-    def parse_latest_logs(self, path: str):
+    def parse_latest_logs(self, path: str) -> list[LogEntry]:
             entries = self.parse_logs(path)
             pointer_file =  self.__pointer_path + "/EventPointer.txt"
             last_event = self.__get_last_event_date(entries)
